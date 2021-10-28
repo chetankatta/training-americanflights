@@ -1,0 +1,77 @@
+#%RAML 1.0
+baseUri: 
+ https://anypoint.mulesoft.com/mocking/api/v1/links/5fca6db3-83f6-4440-924e-bb0f0d58cf3f/ #
+
+title: American Flights Api
+mediaType: [application/json]
+
+types:
+  AmericanFlightDatatype: !include exchange_modules/68ef9520-24e9-4cf2-b2f5-620025690913/training-american-flight-data-type/1.0.1/AmericanFlightDataType.raml
+
+/flights:
+  get:
+    description: Fetch the details based on the destination
+    displayName: Flights
+    queryParameters:
+      destination:
+        required: false
+        default: SFO
+        minLength:  3
+        maxLength: 3
+        enum:
+            - LAX
+            - SFO
+            - CLE
+    responses:
+      200:
+        body:
+          application/json:
+            type:  AmericanFlightDatatype[]
+            examples: !include exchange_modules/68ef9520-24e9-4cf2-b2f5-620025690913/training-american-flights-example/1.0.1/AmericanFlightsExample.raml
+  post:  
+    description: Create a new flight object
+    body:
+      application/json:
+        type: AmericanFlightDatatype
+        example: !include AmericanFlightsNoIdExample.raml
+    responses:
+      201:
+        body:
+          application/json:
+            example:
+              message: Flight was added successfully
+
+  /{id}:
+    get:
+      description: Retrive Flight details based on the Flight Id
+      responses:
+        200:
+          body:
+            application/json:
+              type: AmericanFlightDatatype
+              example:
+                !include AmericanFlightsNoIdExample.raml
+    put:
+      description: update flight details based on the flight id
+      body:
+        application/json:
+          type: AmericanFlightDatatype
+          example:
+            !include AmericanFlightsNoIdExample.raml
+      responses:
+          200:
+            body:
+              application/json:
+                example:
+                  message: Flight was updated sucessfully
+
+
+    delete:
+      description: Delete a flight object based on the flight id
+      responses:
+        200:
+          body:
+            application/json:
+              example:
+                message: Flight was deleted sucessfully 
+          
